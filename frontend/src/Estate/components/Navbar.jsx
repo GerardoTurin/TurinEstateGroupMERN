@@ -16,7 +16,7 @@ const Navbar = () => {
                         About
                     </li>
                 </Link>
-                <Link to="/sign-in">
+                <Link to="/signin">
                     <li className=" text-gray-500 hover:text-gray-900 font-semibold cursor-pointer">
                         Sign In
                     </li>
