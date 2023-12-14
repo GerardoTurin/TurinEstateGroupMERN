@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import conectDB from "../db/conectDB.js";
+import userRouter from "../routes/userRoute.js";
+
+
 
 
 
@@ -10,11 +13,9 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 5000;
-        /* this.paths = {
+        this.paths = {
             userPath: '/api/user',       // Creamos una ruta para los eventos
-            productPath: '/api/product',     // Creamos una ruta para los eventos
-            contactPath: '/api/contact',       // Creamos una ruta para los eventos
-        } */
+        }
         
         
         //Coneccion a la base de datos
@@ -23,12 +24,8 @@ class Server {
         // Middlewares
         this.middlewares();
         
-        
-        /* 
-
-
         // Rutas de mi app
-        this.routes(); */
+        this.routes();
     };
 
 
@@ -65,11 +62,9 @@ class Server {
 
 
     // Rutas de mi app
-    /* routes() {
-        this.app.use( this.paths.userPath, require('../routes/user.routes') );   // use: para usar un middleware
-        this.app.use( this.paths.productPath, require('../routes/product.routes') );   // use: para usar un middleware
-        this.app.use( this.paths.contactPath, require('../routes/contact.routes') );   // use: para usar un middleware
-    }; */
+    routes() {
+        this.app.use( this.paths.userPath, userRouter );   // use: para usar un middleware
+    };
 
 
     // Escuchar servidor
