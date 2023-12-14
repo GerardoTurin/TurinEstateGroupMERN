@@ -29,10 +29,6 @@ class Server {
     };
 
 
-    /* async conectarDB() {
-        await conectionDB();
-    } */
-
     async conectionDB() {
         await conectDB();
     }
@@ -41,9 +37,13 @@ class Server {
     middlewares() {
         // Cors
         this.app.use( cors() ); // use: para usar un middleware
+        
+        
+        // Lectura y parseo del body
+        this.app.use( express.json() ); 
+
 
         /* // Lectura y parseo del body
-        this.app.use( express.json() ); 
         this.app.use(cookieParser(
             { sameSite: 'none', secure: true}
         ));   // cookieParser: para usar cookies, se usa antes de las rutas
