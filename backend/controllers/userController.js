@@ -1,4 +1,5 @@
 import existingEmail from "../helpers/existingEmail.js";
+import errorHandlers from "../middlewares/error.js";
 import userModel from "../models/userModel.js";
 
 
@@ -23,7 +24,7 @@ const SignUp = async (req, res) => {
 
 
     if ( await existingEmail(email) ) {
-        return res.status(400).json({
+        return res.status(400).json({  
             ok: false,
             msg: 'Email already exists'
         });
@@ -46,6 +47,8 @@ const SignUp = async (req, res) => {
             ok: false,
             msg: 'Please contact the administrator'
         });
+
+        //next(errorHandlers(500, 'Please contact the administrator'));
     };
 };
 
