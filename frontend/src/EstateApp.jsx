@@ -5,7 +5,6 @@ import AppRouter from "./router/AppRouter";
 
 
 const EstateApp = () => {
-
     return (
         <BrowserRouter>
             <AppRouter />

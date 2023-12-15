@@ -23,8 +23,10 @@ const Header = () => {
                 <form className="bg-gray-100 p-3 rounded-lg flex items-center">
                     <input 
                         type="text" 
+                        id="search" // Agrega un id único al campo de búsqueda
                         className="bg-transparent focus:outline-none w-24 sm:w-64"
-                        placeholder="Search..." />
+                        placeholder="Search..." 
+                    />
                     <FaSearch className="text-gray-500" />
                 </form>
 
