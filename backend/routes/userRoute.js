@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import existingEmail from '../helpers/existingEmail.js';
-import { SignUp, getUsers } from '../controllers/userController.js';
 import validateFields from '../middlewares/validateFields.js';
+import { 
+        SignUp, 
+        getUsers, 
+        SignIn 
+                } from '../controllers/userController.js';
 
 
 const userRouter = Router();
@@ -19,6 +23,15 @@ userRouter.post('/signup',
                 validatePassword,
                 validateFields,
                 SignUp
+                );
+
+
+//! POST - Sign In User
+userRouter.post('/signin', 
+                validateEmail,
+                validatePassword,
+                validateFields,
+                SignIn
                 );
 
 

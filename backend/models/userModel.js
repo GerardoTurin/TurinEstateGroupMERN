@@ -21,8 +21,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-        minLenght: [6, "La contraseña debe tener al menos 6 caracteres"],
-        maxLenght: [18, "La contraseña debe tener como máximo 18 caracteres"],
     },
     checkUser: {
         type: Boolean,
@@ -63,6 +61,12 @@ userSchema.pre('save', async function(next) {
 /* userSchema.methods.comparePassword = async function(password) {
     return await bcryptjs.compare(password, this.password);
 }; */
+
+//^ No mostrar el password en la respuesta
+userSchema.methods.toJSON = function() {
+    const { password, __v, ...user } = this.toObject();
+    return user;
+};
 
 
 export default model('User', userSchema);
