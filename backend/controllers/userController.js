@@ -26,10 +26,11 @@ const SignUp = async (req, res) => {
 
 
     if ( await existingEmail(email) ) {
-        return res.status(400).json({  
+        res.status(400).json({  
             ok: false,
             msg: 'Email already exists'
         });
+        return;
     };
 
 
@@ -87,9 +88,9 @@ const SignIn = async (req, res) => {
     // Send HTTP-ONLY cookie with the token
     res.cookie('token', token, {
         httpOnly: true,
-        secure: false,
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-        path: '/'
+        //secure: false,
+        //maxAge: 1000 * 60 * 60 * 24, // 1 day
+        //path: '/'
     });
 
 

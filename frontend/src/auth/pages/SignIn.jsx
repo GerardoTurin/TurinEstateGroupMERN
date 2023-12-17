@@ -1,24 +1,100 @@
 import { Link } from "react-router-dom";
+import useAuthStore from "../hooks/useAuthStore";
+import useForm from "../hooks/useForm";
+import { useState } from "react";
+
+
+const SignInFormFields = {
+    email: '',
+    password: ''
+
+};
+
+
+
 
 const SignIn = () => {
+
+    const { startSignIn, validateEmail } = useAuthStore();
+    const { email, password, onInputChange } = useForm( SignInFormFields );
+    const [ isLoading, setIsLoading ] = useState( false );
+
+
+
+    const handleSubmit = async (evt) => {
+        evt.preventDefault();
+        setIsLoading( true );
+
+        if ( email.trim() === '' || password.trim() === '' ) {
+            alert('All fields are required');
+            setIsLoading( false );
+            return;
+        }
+
+        if ( !validateEmail( email ) ) {
+            alert('Invalid email');
+            setIsLoading( false );
+            return;
+        }
+
+        await startSignIn( email, password );
+        setIsLoading( false );
+        //onResetForm();
+    };
+
+
+
+
     return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className="text-3xl text-center font-semibold my-7">
                 Sign In
             </h1>
 
-            <form className="flex flex-col gap-3">
+            <form
+                onSubmit={ handleSubmit } 
+                className="flex flex-col gap-3">
 
                 <label htmlFor="email" className="block">
                     Email
                 </label>
-                <input type="email" id="email" className="border border-gray-300 p-2 rounded-lg" />
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="email"
+                    autoComplete="on"
+                    value={ email }
+                    onChange={ onInputChange }
+                    className="border border-gray-300 p-2 rounded-lg" 
+                    />
                 <label htmlFor="password" className="block">
                     Password
                 </label>
-                <input type="password" id="password" className="border border-gray-300 p-2 rounded-lg" />
-                <button className="bg-slate-500 text-white p-2 rounded-lg mt-3 hover:bg-slate-700">
-                    Sign In
+                <input 
+                    type="password"
+                    name="password" 
+                    id="password" 
+                    autoComplete="on"
+                    value={ password }
+                    onChange={ onInputChange }
+                    className="border border-gray-300 p-2 rounded-lg" 
+                    />
+                <button
+                    disabled={ isLoading }
+                    className="bg-slate-500 text-white p-2 rounded-lg mt-3 hover:bg-slate-700">
+                    {
+                        isLoading ? (
+                            <div className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                                <span>Loading...</span>
+                            </div>
+                        ) : (
+                            'Sign In'
+                        )
+                    }
                 </button>
 
             </form>

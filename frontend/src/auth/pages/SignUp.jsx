@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useForm from "../hooks/useForm";
 import useAuthStore from "../hooks/useAuthStore";
 import { useState } from "react";
@@ -22,7 +22,6 @@ const SignUp = () => {
     const [ isLoading, setIsLoading ] = useState( false );
 
     // si el usuario ya esta autenticado, redirigirlo a la pagina de inicio
-    const navigate = useNavigate();
 
 
     const handleSubmit = async (evt) => {
@@ -59,18 +58,9 @@ const SignUp = () => {
         }
 
 
-        try {
-            await startSignUp( name, email, password );
-            onResetForm();
-            navigate( '/' );
-            
-        } catch (error) {
-            console.log(error);
-            alertify.error( error.message );
-
-        } finally {
-            setIsLoading( false );
-        }
+        await startSignUp( name, email, password );
+        onResetForm();
+        setIsLoading( false );
     };
 
     return (
@@ -128,6 +118,7 @@ const SignUp = () => {
                     />
 
                 <button 
+                    type="submit"
                     className="bg-slate-500 text-white text-center p-2 rounded-lg mt-3 hover:bg-slate-700"
                     disabled={ isLoading }
                     >
