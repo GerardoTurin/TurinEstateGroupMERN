@@ -22,6 +22,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    photo:{
+        type: String,
+        default: 'https://i.ibb.co/4pDNDk1/avatar.png',
+    },
     checkUser: {
         type: Boolean,
         default: false,

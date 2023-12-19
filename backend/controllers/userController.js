@@ -3,6 +3,7 @@ import existingEmail from "../helpers/existingEmail.js";
 import bcryptjs from 'bcryptjs'; // Encriptar contraseñas
 import userModel from "../models/userModel.js";
 import generateJWT from "../helpers/generateJWT.js";
+import { JWT, OAuth2Client } from "google-auth-library";
 
 
 
@@ -58,6 +59,65 @@ const SignUp = async (req, res) => {
 
 
 
+
+//! OAuth Google
+
+const googleSignIn = async (req, res) => {
+    const { email, name, photo } = req.body;
+
+    try {
+        let user = await userModel.findOne({ email });
+
+        if (user) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Please use your normal authentication'
+            });
+
+        } else {
+            user = new userModel({
+                name,
+                email,
+                photo,
+                checkUser: true,
+                googleUser: true,
+                password: 'google', // Puedes usar una contraseña predeterminada o generar una aleatoria
+            });
+
+            await user.save();
+        }
+
+        // Generar JWT, enviar respuesta, etc.
+        const token = await generateJWT(user.id, user.name);
+
+        // Send HTTP-ONLY cookie with the token
+        res.cookie('token', token, {
+            httpOnly: true,
+        });
+
+        res.status(200).json({
+            ok: true,
+            msg: 'User Logged',
+            user,
+            token
+        });
+    
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Please contact the administrator'
+        });
+    }
+
+};
+
+
+
+
+
+
 //! Sign In User
 
 const SignIn = async (req, res) => {
@@ -109,5 +169,6 @@ const SignIn = async (req, res) => {
 export {
     getUsers,
     SignUp,
-    SignIn
+    SignIn,
+    googleSignIn
 };

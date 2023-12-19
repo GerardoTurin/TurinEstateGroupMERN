@@ -5,7 +5,8 @@ import validateFields from '../middlewares/validateFields.js';
 import { 
         SignUp, 
         getUsers, 
-        SignIn 
+        SignIn,
+        googleSignIn, 
                 } from '../controllers/userController.js';
 
 
@@ -23,6 +24,14 @@ userRouter.post('/signup',
                 validatePassword,
                 validateFields,
                 SignUp
+                );
+
+
+
+
+//! POST - Google Sign In
+userRouter.post('/google-signin', 
+                googleSignIn
                 );
 
 

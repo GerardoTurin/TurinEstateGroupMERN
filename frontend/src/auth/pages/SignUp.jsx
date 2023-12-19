@@ -3,6 +3,7 @@ import useForm from "../hooks/useForm";
 import useAuthStore from "../hooks/useAuthStore";
 import { useState } from "react";
 import alertify from 'alertifyjs';
+import OAuth from "../components/OAuth";
 
 
 const SignUpFormFields = {
@@ -138,9 +139,7 @@ const SignUp = () => {
                 </button>
 
                 {/* sign up with google */}
-                <button className="bg-red-500 text-white p-2 rounded-lg mt-3 hover:bg-red-700">
-                    Continue with Google
-                </button>
+                <OAuth />
 
             </form>
             {/* have account */}
