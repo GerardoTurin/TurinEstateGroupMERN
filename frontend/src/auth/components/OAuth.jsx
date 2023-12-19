@@ -15,7 +15,6 @@ const OAuth = () => {
 
     const handleSuccess = async (data) => {
         const credentials = jwtDecode(data.credential);
-        console.log(credentials);
 
         try {
             const res = await fetch('/api/user/google-signin', {

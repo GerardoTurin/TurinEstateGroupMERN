@@ -3,7 +3,7 @@ import existingEmail from "../helpers/existingEmail.js";
 import bcryptjs from 'bcryptjs'; // Encriptar contraseñas
 import userModel from "../models/userModel.js";
 import generateJWT from "../helpers/generateJWT.js";
-import { JWT, OAuth2Client } from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
 
 
 
@@ -68,13 +68,7 @@ const googleSignIn = async (req, res) => {
     try {
         let user = await userModel.findOne({ email });
 
-        if (user) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'Please use your normal authentication'
-            });
-
-        } else {
+        if (!user) {
             user = new userModel({
                 name,
                 email,
@@ -83,9 +77,8 @@ const googleSignIn = async (req, res) => {
                 googleUser: true,
                 password: 'google', // Puedes usar una contraseña predeterminada o generar una aleatoria
             });
-
             await user.save();
-        }
+        } 
 
         // Generar JWT, enviar respuesta, etc.
         const token = await generateJWT(user.id, user.name);
