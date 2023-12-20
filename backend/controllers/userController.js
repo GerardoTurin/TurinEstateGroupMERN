@@ -159,9 +159,51 @@ const SignIn = async (req, res) => {
 
 
 
+
+//! Update User
+
+const updateUser = async (req, res) => {
+    const user = await userModel.findById(req.user.id);
+
+    if ( user ) {
+        if ( user.googleUser === true ) {
+            user.email = user.email;
+            user.password = user.password;
+            user.name = req.body.name || user.name;
+            user.photo = req.body.photo || user.photo;
+
+        } else {
+            user.email = user.email;
+            user.password = req.body.password || user.password;
+            user.name = req.body.name || user.name;
+            user.photo = req.body.photo || user.photo;
+        
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            ok: true,
+            msg: 'User Updated',
+            updatedUser
+        });
+    };
+
+    res.status(404).json({
+        ok: false,
+        msg: 'User not found'
+    });
+
+}
+
+
+
+
+
 export {
     getUsers,
     SignUp,
     SignIn,
-    googleSignIn
+    googleSignIn,
+    updateUser
 };

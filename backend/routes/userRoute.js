@@ -6,8 +6,10 @@ import {
         SignUp, 
         getUsers, 
         SignIn,
-        googleSignIn, 
+        googleSignIn,
+        updateUser, 
                 } from '../controllers/userController.js';
+import checkAuth from '../middlewares/authCheck.js';
 
 
 const userRouter = Router();
@@ -46,6 +48,13 @@ userRouter.post('/signin',
 
 //! GET - All Users
 userRouter.get('/', getUsers);
+
+
+
+//! PUT - Update User
+userRouter.patch('/updateuser',
+                checkAuth,
+                updateUser);
 
 
 
