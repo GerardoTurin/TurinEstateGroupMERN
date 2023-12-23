@@ -2,11 +2,11 @@ import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "../hooks/useAuthStore";
 
 const PrivateRoute = () => {
-    const { status, user } = useAuthStore();
+    const { user } = useAuthStore();
     return (
         <>
             {
-                user && status === 'active' 
+                user 
                 ? <Outlet />
                 : <Navigate to="/signin" />
             }

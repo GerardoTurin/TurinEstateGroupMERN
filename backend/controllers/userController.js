@@ -166,35 +166,38 @@ const updateUser = async (req, res) => {
     const user = await userModel.findById(req.user.id);
 
     if ( user ) {
-        if ( user.googleUser === true ) {
-            user.email = user.email;
-            user.password = user.password;
-            user.name = req.body.name || user.name;
-            user.photo = req.body.photo || user.photo;
-
-        } else {
-            user.email = user.email;
-            user.password = req.body.password || user.password;
-            user.name = req.body.name || user.name;
-            user.photo = req.body.photo || user.photo;
+        user.email = user.email;
+        user.password = req.body.password || user.password;
+        user.name = req.body.name || user.name;
+        user.photo = req.body.photo || user.photo;
         
-        }
 
         const updatedUser = await user.save();
 
-        res.json({
+        return res.status(200).json({
             ok: true,
             msg: 'User Updated',
             updatedUser
         });
     };
 
-    res.status(404).json({
+    return res.status(404).json({
         ok: false,
         msg: 'User not found'
     });
 
-}
+};
+
+
+
+const LogOutUser = async (req, res) => {
+    res.clearCookie('token');
+
+    return res.status(200).json({
+        ok: true,
+        msg: 'User Logged Out',
+    });
+};
 
 
 
@@ -205,5 +208,6 @@ export {
     SignUp,
     SignIn,
     googleSignIn,
-    updateUser
+    updateUser,
+    LogOutUser
 };

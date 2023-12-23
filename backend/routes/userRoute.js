@@ -7,7 +7,8 @@ import {
         getUsers, 
         SignIn,
         googleSignIn,
-        updateUser, 
+        updateUser,
+        LogOutUser, 
                 } from '../controllers/userController.js';
 import checkAuth from '../middlewares/authCheck.js';
 
@@ -55,6 +56,12 @@ userRouter.get('/', getUsers);
 userRouter.patch('/updateuser',
                 checkAuth,
                 updateUser);
+
+
+
+
+//! GET - Logout User
+userRouter.get('/logout', LogOutUser);
 
 
 

@@ -1,29 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import useAuthStore from "../../auth/hooks/useAuthStore";
-import useForm from "../../auth/hooks/useForm";
+//import useForm from "../../auth/hooks/useForm";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
 
 const Profile = () => {
     const fileRef = useRef(undefined);
-    const { user } = useAuthStore();
-    const { onInputChange } = useForm( user );
+    const { user, startUpdateUser, startLogout } = useAuthStore();
+    //const { onInputChange } = useForm( user );
     const [ file, setFile ] = useState(null);
     const [ photoPercentage, setPhotoPercentage ] = useState(0);
     const [ photoErrorMsg, setPhotoErrorMsg ] = useState(false);
-    const [ formData, setFormData ] = useState({});
-    const { name, email, photo } = user;
+    const [ isLoading, setIsLoading ] = useState( false );
+    const { name, email, photo, googleUser } = user;
+    const [ formData, setFormData ] = useState({
+        name: name,
+        email: email,
+        password: '',
+        photo: photo
+    });
+
     
-
-
-
-    // Firebase Storage
-    /* 
-    allow read;
-      allow write: if
-      request.resource.size < 2 * 1024 * 1024 &&
-      request.resource.contentType.matches('images/.*')
-       */
+    /* useEffect(() => {
+        setFormData({ name: name, email: email, password: '', photo: photo });
+    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps */
 
     useEffect(() => {
         if (file) {
@@ -32,6 +32,15 @@ const Profile = () => {
     }, [file]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
+
+    const onInputChange = ({ target }) => {
+        const { name, value } = target;
+
+        setFormData(form => ({
+            ...form,
+            [name]: value
+        }));
+    };
 
     const handleUploadFile = (file) => {
         const storage = getStorage(app);
@@ -63,8 +72,32 @@ const Profile = () => {
                 });
             }
         );
+    };  
+
+
+
+    const handleSubmit = async (evt) => {
+        evt.preventDefault();
+        setIsLoading( true );
+        
+        try {
+            await startUpdateUser(formData);
+        } catch (error) {
+            console.log(error);
+        }
+        setIsLoading( false );
     };
 
+
+    const handleLogout = async () => {
+        try {
+            await startLogout();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    
     
     
     return (
@@ -73,7 +106,9 @@ const Profile = () => {
                 Profile
             </h1>
 
-            <form className="flex flex-col mx-auto gap-3">
+            <form 
+                onSubmit={ handleSubmit }
+                className="flex flex-col mx-auto gap-3">
                 <input
                     type="file"
                     ref={ fileRef }
@@ -84,7 +119,7 @@ const Profile = () => {
                 <img
                     className="w-24 h-24 rounded-full object-cover cursor-pointer mx-auto my-5"
                     onClick={ () => fileRef.current.click() }
-                    src={ formData.photo || photo }
+                    src={ formData?.photo || photo }
                     alt="user profile"
                 />
                 <p className="text-sm font-semibold self-center">
@@ -109,7 +144,8 @@ const Profile = () => {
                     type="text"
                     className="border border-gray-300 rounded-md p-3"
                     placeholder="Name"
-                    value={name} 
+                    name="name"
+                    value={ formData.name }
                     id="name"
                     autoComplete="off"
                     onChange={ onInputChange }
@@ -119,7 +155,8 @@ const Profile = () => {
                     type="email"
                     className="border border-gray-300 rounded-md p-3"
                     placeholder="Email"
-                    value={email} 
+                    name="email"
+                    value={ formData.email }
                     id="email"
                     autoComplete="off"
                     onChange={ onInputChange }
@@ -131,20 +168,36 @@ const Profile = () => {
                     id="password"
                     autoComplete="off"
                     onChange={ onInputChange }
+                    disabled={ googleUser ? true : false }
                     />
 
                 <button
                     type="submit"
                     className="bg-blue-500 text-white rounded-md p-3"
+                    disabled={ isLoading }
                     >
-                    Update
+                    {
+                        isLoading ? (
+                            <div className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                                <span>Loading...</span>
+                            </div>
+                        ) : (
+                            'Update Profile'
+                        )
+                    }
                 </button>
             </form>
             <div className="flex mt-3 justify-between">
                 <span className="text-red-700 cursor-pointer font-semibold">
                     Delete Account
                 </span>
-                <span className="text-red-500 cursor-pointer font-semibold">
+                <span
+                    onClick={ handleLogout } 
+                    className="text-red-500 cursor-pointer font-semibold">
                     Sign Out
                 </span>
             </div>

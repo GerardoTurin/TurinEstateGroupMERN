@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import alertify from 'alertifyjs';
 import { useNavigate } from 'react-router-dom';
-import { checkLogin, checkRegister, onLogout, onSignIn } from "../../store/features/auth/authSlice";
+import { checkLogin, checkRegister, onLogout, onSignIn, onUpdateUser } from "../../store/features/auth/authSlice";
 
 
 
@@ -105,7 +105,8 @@ const useAuthStore = () => {
             const res = await fetch('/api/user/signin', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    credentials: 'include'
                 },
                 body: JSON.stringify({ email, password })
             });
@@ -137,6 +138,71 @@ const useAuthStore = () => {
 
 
 
+    const startUpdateUser = async (formData) => {
+        try {
+            const res = await fetch('/api/user/updateuser', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                credentials: 'include'
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (data.ok) {
+                dispatch(onUpdateUser(data.updatedUser));
+                alertify.success(`User updated`);
+
+            } else {
+                
+                const errorMessage = data.msg;
+                alertify.error(`Error signing in: ${errorMessage}`);
+            }
+
+            return data;
+            
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error contact the administrator');
+        }
+    };
+
+
+
+
+    const startLogout = async () => {
+            
+            try {
+                const res = await fetch('/api/user/logout', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+    
+                const data = await res.json();
+    
+                if (data.ok) {
+                    dispatch(onLogout());
+    
+                } else {
+                    
+                    const errorMessage = data.msg;
+                    alertify.error(`Error signing in: ${errorMessage}`);
+                }
+                
+            } catch (error) {
+                console.log(error);
+                alertify.error('Error contact the administrator');
+            }
+    };
+
+
+
 
     return {
 
@@ -151,7 +217,9 @@ const useAuthStore = () => {
         validateEmail,
         startSignUp,
         startSignIn,
-        startGoogleSignIn
+        startGoogleSignIn,
+        startUpdateUser,
+        startLogout
     }
 };
 

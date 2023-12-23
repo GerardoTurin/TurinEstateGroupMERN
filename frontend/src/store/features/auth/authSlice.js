@@ -32,13 +32,15 @@ export const authSlice = createSlice({
         },
         onLogout: (state, { payload }) => {
             state.status = 'no-register';
-            state.user = {};
+            state.user = null;
             if ( payload ) {    //^ Si el payload existe, es porque se está llamando a la acción onLogout desde el catch de una petición http.
                 state.errorMenssage = payload;
             }
         },
         onUpdateUser: (state, { payload }) => {
-            state.user = payload;
+            state.status = 'active';
+            state.user = { ...state.user, ...payload };   //^ Actualiza el usuario con los nuevos datos, pero mantiene los antiguos, si no se actualizan.
+            state.errorMenssage = null;
         },
         clearError: (state) => {
             state.errorMenssage = null;
