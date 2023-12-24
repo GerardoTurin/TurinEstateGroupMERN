@@ -8,7 +8,8 @@ import {
         SignIn,
         googleSignIn,
         updateUser,
-        LogOutUser, 
+        logOutUser,
+        deleteUser, 
                 } from '../controllers/userController.js';
 import checkAuth from '../middlewares/authCheck.js';
 
@@ -61,7 +62,14 @@ userRouter.patch('/updateuser',
 
 
 //! GET - Logout User
-userRouter.get('/logout', LogOutUser);
+userRouter.get('/logout', logOutUser);
+
+
+
+//! DELETE - Delete User
+userRouter.delete('/deleteuser/:id', 
+                checkAuth,
+                deleteUser);
 
 
 

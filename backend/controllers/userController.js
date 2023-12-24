@@ -190,7 +190,13 @@ const updateUser = async (req, res) => {
 
 
 
-const LogOutUser = async (req, res) => {
+
+
+
+
+//! Log Out User
+
+const logOutUser = async (req, res) => {
     res.clearCookie('token');
 
     return res.status(200).json({
@@ -203,11 +209,37 @@ const LogOutUser = async (req, res) => {
 
 
 
+
+//! Delete User
+
+const deleteUser = async (req, res) => {
+
+    const user = await userModel.findById(req.params.id);
+
+    if ( !user ) {
+        return res.status(404).json({
+            ok: false,
+            msg: 'User not found'
+        });
+    };
+
+    const deletedUser = await userModel.findByIdAndDelete(req.params.id);
+    res.clearCookie('token');   // Clear cookie
+    
+    return res.status(200).json({
+        ok: true,
+        msg: 'User Deleted',
+        deletedUser
+    });
+};
+
+
 export {
     getUsers,
     SignUp,
     SignIn,
     googleSignIn,
     updateUser,
-    LogOutUser
+    logOutUser,
+    deleteUser
 };

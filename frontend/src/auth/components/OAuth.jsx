@@ -34,8 +34,6 @@ const OAuth = () => {
             
             if (data.ok) {
                 const { user } = data;
-                console.log(user);
-
 
                 dispatch(onSignIn(user));
                 alertify.success(`Welcome ${user.name}`);

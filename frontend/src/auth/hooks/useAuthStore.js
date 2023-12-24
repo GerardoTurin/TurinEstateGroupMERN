@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import alertify from 'alertifyjs';
 import { useNavigate } from 'react-router-dom';
-import { checkLogin, checkRegister, onLogout, onSignIn, onUpdateUser } from "../../store/features/auth/authSlice";
+import { checkLogin, checkRegister, onLogout, onSignIn, onUpdateUser, onDeleteUser } from "../../store/features/auth/authSlice";
 
 
 
@@ -204,6 +204,41 @@ const useAuthStore = () => {
 
 
 
+
+    const startDeleteUser = async (id) => {
+        try {
+            const res = await fetch(`/api/user/deleteuser/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (data.ok) {
+
+                dispatch(onDeleteUser());
+            } else {
+                
+                const errorMessage = data.msg;
+                alertify.error(`Error signing in: ${errorMessage}`);
+                return;
+            }
+
+            return data;
+            
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error contact the administrator');
+        }
+    };
+
+
+
+
     return {
 
         //^ Propiedades
@@ -219,7 +254,8 @@ const useAuthStore = () => {
         startSignIn,
         startGoogleSignIn,
         startUpdateUser,
-        startLogout
+        startLogout,
+        startDeleteUser
     }
 };
 

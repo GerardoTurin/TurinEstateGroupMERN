@@ -42,10 +42,15 @@ export const authSlice = createSlice({
             state.user = { ...state.user, ...payload };   //^ Actualiza el usuario con los nuevos datos, pero mantiene los antiguos, si no se actualizan.
             state.errorMenssage = null;
         },
+        onDeleteUser: (state) => {
+            state.status = 'no-register';
+            state.user = null;
+            state.errorMenssage = null;
+        },
         clearError: (state) => {
             state.errorMenssage = null;
         }
     },
 });
 
-export const { checkLogin, checkRegister, onSignIn, onLogout, onActiveAccount, onUpdateUser ,clearError } = authSlice.actions;
+export const { checkLogin, checkRegister, onSignIn, onLogout, onActiveAccount, onUpdateUser, onDeleteUser, clearError } = authSlice.actions;

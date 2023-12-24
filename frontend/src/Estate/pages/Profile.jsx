@@ -3,10 +3,12 @@ import useAuthStore from "../../auth/hooks/useAuthStore";
 //import useForm from "../../auth/hooks/useForm";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
+import SignOut from "../components/SignOut";
+import DeleteAccount from "../components/DeleteAccount";
 
 const Profile = () => {
     const fileRef = useRef(undefined);
-    const { user, startUpdateUser, startLogout } = useAuthStore();
+    const { user, startUpdateUser } = useAuthStore();
     //const { onInputChange } = useForm( user );
     const [ file, setFile ] = useState(null);
     const [ photoPercentage, setPhotoPercentage ] = useState(0);
@@ -89,13 +91,7 @@ const Profile = () => {
     };
 
 
-    const handleLogout = async () => {
-        try {
-            await startLogout();
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    
 
     
     
@@ -192,14 +188,8 @@ const Profile = () => {
                 </button>
             </form>
             <div className="flex mt-3 justify-between">
-                <span className="text-red-700 cursor-pointer font-semibold">
-                    Delete Account
-                </span>
-                <span
-                    onClick={ handleLogout } 
-                    className="text-red-500 cursor-pointer font-semibold">
-                    Sign Out
-                </span>
+                <DeleteAccount />
+                <SignOut />
             </div>
         </div>
     )
