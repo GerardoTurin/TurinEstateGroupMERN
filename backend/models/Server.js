@@ -3,6 +3,7 @@ import cors from "cors";
 import conectDB from "../db/conectDB.js";
 import userRouter from "../routes/userRoute.js";
 import cookieParser from "cookie-parser";
+import listingRouter from "../routes/listingRoute.js";
 
 
 
@@ -16,6 +17,7 @@ class Server {
         this.port = process.env.PORT || 5000;
         this.paths = {
             userPath: '/api/user',       // Creamos una ruta para los eventos
+            listingPath: '/api/listing',
         }
         
         
@@ -67,6 +69,7 @@ class Server {
     // Rutas de mi app
     routes() {
         this.app.use( this.paths.userPath, userRouter );   // use: para usar un middleware
+        this.app.use( this.paths.listingPath, listingRouter );   // use: para usar un middleware
     };
 
 

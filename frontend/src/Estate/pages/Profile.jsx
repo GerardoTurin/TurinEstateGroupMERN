@@ -16,16 +16,19 @@ const Profile = () => {
     const [ isLoading, setIsLoading ] = useState( false );
     const { name, email, photo, googleUser } = user;
     const [ formData, setFormData ] = useState({
-        name: name,
-        email: email,
+        name: '',
+        email: '',
         password: '',
-        photo: photo
+        photo: ''
     });
+    
 
     
-    /* useEffect(() => {
+    useEffect(() => {
         setFormData({ name: name, email: email, password: '', photo: photo });
-    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps */
+    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
 
     useEffect(() => {
         if (file) {
@@ -47,7 +50,6 @@ const Profile = () => {
     const handleUploadFile = (file) => {
         const storage = getStorage(app);
         const fileName = new Date().getTime() + file.name;  // 1629781231231.jpg
-
         const storageRef = ref(storage, fileName);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -62,10 +64,6 @@ const Profile = () => {
                 // error
                 console.log(error);
                 setPhotoErrorMsg(true);
-            },
-            () => {
-                // complete
-                setPhotoErrorMsg(false);
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -114,8 +112,8 @@ const Profile = () => {
                     />
                 <img
                     className="w-24 h-24 rounded-full object-cover cursor-pointer mx-auto my-5"
-                    onClick={ () => fileRef.current.click() }
                     src={ formData?.photo || photo }
+                    onClick={ () => fileRef.current.click() }
                     alt="user profile"
                 />
                 <p className="text-sm font-semibold self-center">
