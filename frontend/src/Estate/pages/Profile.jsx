@@ -5,6 +5,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from "../../firebase";
 import SignOut from "../components/SignOut";
 import DeleteAccount from "../components/DeleteAccount";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const fileRef = useRef(undefined);
@@ -88,12 +89,6 @@ const Profile = () => {
         setIsLoading( false );
     };
 
-
-    
-
-    
-    
-    
     return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className="text-3xl text-center my-7 font-semibold">
@@ -184,6 +179,11 @@ const Profile = () => {
                         )
                     }
                 </button>
+                <Link 
+                    to="/createlisting"
+                    className="bg-green-500 text-white rounded-md p-3 text-center">
+                    Create Listing
+                </Link>
             </form>
             <div className="flex mt-3 justify-between">
                 <DeleteAccount />

@@ -6,6 +6,7 @@ import SignUp from "../auth/pages/SignUp";
 import PrivateRoute from "../auth/components/PrivateRoute";
 import Profile from "../Estate/pages/Profile";
 import Header from "../Estate/components/Header";
+import CreateListing from "../Estate/pages/CreateListing";
 
 const AppRouter = () => {
     return (
@@ -18,6 +19,7 @@ const AppRouter = () => {
                 <Route path="/about" element={ <About /> } />
                 <Route element={ <PrivateRoute /> }>
                     <Route path="/profile" element={ <Profile /> } />
+                    <Route path="/createlisting" element={ <CreateListing /> } />
                 </Route>
                 <Route path="*" element={ <h1>Not found</h1> } />
             </Routes>
