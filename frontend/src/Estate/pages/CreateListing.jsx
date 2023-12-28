@@ -1,5 +1,92 @@
+import { useState } from "react";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { app } from "../../firebase";
 
 const CreateListing = () => {
+    const [files, setFiles] = useState([]);
+    const [ imageErrorMsg, setImageErrorMsg ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState( false );
+    const [formData, setFormData] = useState({
+        imageUrls: [],
+    });
+    console.log(formData);
+
+
+
+    const handleFileChange = (evt) => {
+        const { files } = evt.target;
+        setFiles(files);
+    };
+
+
+
+    const handleImageSubmit = () => {
+        if (files.length >= 1 && files.length +  formData.imageUrls.length <= 6) {
+            setIsLoading(true);
+            setImageErrorMsg(false);
+            const promises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                promises.push( storeImages( files[i] ) );
+            }
+
+            Promise.all(promises).then( (urls) => {
+                console.log(urls);
+                setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
+                setImageErrorMsg(false);
+                setIsLoading(false);
+
+            }).catch( (error) => {
+                console.log(error);
+                setImageErrorMsg('Error uploading images (2 mb max per image)');
+                setIsLoading(false);
+            })
+            
+        } else {
+            setImageErrorMsg('You can only upload 6 images');
+            setIsLoading(false);
+        }
+    };
+
+
+
+    const storeImages = async (file) => {
+        return new Promise( ( resolve, reject ) => {
+            const storage = getStorage(app);
+            const fileName = new Date().getTime() + file.name;  // 1629781231231.jpg
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // progress
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    // error
+                    reject(error);
+                    console.log(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        resolve(downloadURL)
+                        console.log('File available at', downloadURL);
+                        //setFormData({ ...formData, photo: downloadURL });
+                    });
+                }
+            );
+        });
+    };
+
+
+
+    const handleRemoveImage = ( index ) => {
+        setFormData({ ...formData, imageUrls: formData.imageUrls.filter( (url, i) => i !== index ) });
+    }; 
+
+
+
     return (
         <main className="p-3 max-w-4xl mx-auto">
             <h1 className='text-center font-bold text-3xl my-10'>
@@ -166,6 +253,7 @@ const CreateListing = () => {
                     </p>
                     <div className="flex gap-4">
                         <input 
+                            onChange={ (evt) => handleFileChange(evt) }
                             type="file" 
                             name="images" 
                             id="images" 
@@ -173,11 +261,49 @@ const CreateListing = () => {
                             accept="image/*"
                             multiple
                             />
-                            <button className="bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
-                                Upload
+                            <button
+                                type="button"
+                                onClick={ handleImageSubmit } 
+                                className="bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600"
+                                disabled={ isLoading }>
+                                {
+                                    isLoading ? (
+                                        <div className="flex items-center justify-center">
+                                            <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                            </svg>
+                                            <span>Loading...</span>
+                                        </div>
+                                    ) : (
+                                        'Upload'
+                                    )
+                                }
                             </button>
                     </div>
-                    <button className="bg-slate-500 text-white p-3 rounded-md hover:bg-slate-600 self-center w-full" type="submit">
+                    <p className="text-red-700 font-semibold self-center">
+                        { imageErrorMsg && imageErrorMsg }
+                    </p>
+                    {
+                        formData.imageUrls.length > 0 &&
+                        formData.imageUrls.map( (url, index) => (
+                            <div key={ index } className="flex justify-between p-3 border rounded-md items-center">
+                                <img
+                                    src={ url }
+                                    alt="listing"
+                                    className="w-20 h-20 object-contain rounded-md"
+                                />
+                                <button
+                                    onClick={ () => handleRemoveImage( index ) }
+                                    type="button" 
+                                    className="bg-red-500 text-white p-3 rounded-md hover:bg-red-600">
+                                    Delete
+                                </button>
+                            </div>
+                        ))
+                    }
+                    <button
+                        className="bg-slate-500 text-white p-3 rounded-md hover:bg-slate-600 self-center w-full">
                         Create Listing
                     </button>
                 </div>
