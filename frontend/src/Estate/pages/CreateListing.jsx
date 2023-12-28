@@ -9,15 +9,24 @@ const CreateListing = () => {
     const [formData, setFormData] = useState({
         imageUrls: [],
     });
-    console.log(formData);
 
 
 
     const handleFileChange = (evt) => {
         const { files } = evt.target;
-        setFiles(files);
-    };
+        //const files = evt.target.files;
+        const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
 
+        
+        // No se pueden subir mas de 6 imagenes
+        if (files.length + formData.imageUrls.length > 6) {
+            setImageErrorMsg('You can only upload 6 images');
+        } else {
+            setFormData({ ...formData, imageUrls: formData.imageUrls.concat(imageUrls) });
+            setImageErrorMsg(false);
+            setFiles( files );
+        }
+    };
 
 
     const handleImageSubmit = () => {
@@ -32,7 +41,7 @@ const CreateListing = () => {
 
             Promise.all(promises).then( (urls) => {
                 console.log(urls);
-                setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
+                //setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
                 setImageErrorMsg(false);
                 setIsLoading(false);
 
