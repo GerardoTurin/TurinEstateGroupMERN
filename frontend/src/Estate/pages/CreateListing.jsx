@@ -1,14 +1,42 @@
 import { useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
+import useEstateStore from "../hooks/useEstateStore";
 
 const CreateListing = () => {
     const [files, setFiles] = useState([]);
     const [ imageErrorMsg, setImageErrorMsg ] = useState(false);
     const [ isLoading, setIsLoading ] = useState( false );
+    const { startCreateListing } = useEstateStore();
     const [formData, setFormData] = useState({
         imageUrls: [],
+        name: '',
+        address: '',
+        description: '',
+        sale: false,
+        type: 'rent',
+        parking: false,
+        furnished: false,
+        offer: false,
+        bedrooms: 1,
+        bathrooms: 1,
+        regularPrice: 1000,
+        discountPrice: 0,
     });
+
+    const onInputChange = (evt) => {
+        if (evt.target.id === 'sale' || evt.target.id === 'rent') {
+            setFormData({ ...formData, type: evt.target.id });
+        }
+
+        if (evt.target.id === 'parking' || evt.target.id === 'furnished' || evt.target.id === 'offer') {
+            setFormData({ ...formData, [evt.target.id]: evt.target.checked });
+        }
+
+        if (evt.target.type === 'number' || evt.target.type === 'text' || evt.target.type === 'textarea') {
+            setFormData({ ...formData, [evt.target.name]: evt.target.value });  //
+        }
+    };
 
 
 
@@ -96,13 +124,36 @@ const CreateListing = () => {
 
 
 
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        setIsLoading(true);
+        try {
+            if (formData.imageUrls.length < 1) {
+                setImageErrorMsg('You need to upload at least 1 image');
+                return;
+            }
+            if (formData.regularPrice < formData.discountPrice) {
+                setImageErrorMsg('Discounted price cannot be greater than regular price');
+                return;
+            }
+            startCreateListing( formData );
+        } catch (error) {
+            console.log(error);
+        }
+        setIsLoading(false);
+    };
+
+
     return (
         <main className="p-3 max-w-4xl mx-auto">
             <h1 className='text-center font-bold text-3xl my-10'>
                 Create a Listing
             </h1>
-            <form className="flex flex-col sm:flex-row gap-4">
-                <div className="flex flex-col gap-4 flex-1">
+            <form
+                onSubmit={ handleSubmit } 
+                className="flex flex-col sm:flex-row gap-4"
+                >
+                <div className="flex flex-col gap-2 flex-1">
                     <label htmlFor="name" className="font-semibold">
                         Name
                     </label>
@@ -112,7 +163,8 @@ const CreateListing = () => {
                         id="name" 
                         autoComplete="off"
                         className="border border-gray-300 p-2 rounded-md" 
-                        placeholder="name" 
+                        onChange={ onInputChange }
+                        value={ formData.name }
                     />
                     <label htmlFor="address" className="font-semibold">
                         Address
@@ -123,7 +175,8 @@ const CreateListing = () => {
                         id="address" 
                         autoComplete="off"
                         className="border border-gray-300 p-2 rounded-md" 
-                        placeholder="Address" 
+                        onChange={ onInputChange }
+                        value={ formData.address }
                     />
                     
                     <label htmlFor="description" className="font-semibold">
@@ -133,15 +186,18 @@ const CreateListing = () => {
                         name="description" 
                         id="description" 
                         className="border border-gray-300 p-2 rounded-md" 
-                        placeholder="Description" 
+                        onChange={ onInputChange }
+                        value={ formData.description }
                     />
-                <div className="flex gap-6 flex-wrap">
+                <div className="flex gap-6 flex-wrap mt-3">
                         <div className="flex gap-2">
                             <input
                                 className="w-5"
                                 type="checkbox" 
                                 name="sale" 
                                 id="sale" 
+                                onChange={ onInputChange }
+                                checked={ formData.type === 'sale' }
                             />
                             <span className="font-semibold">
                                 Sell
@@ -152,7 +208,9 @@ const CreateListing = () => {
                                 className="w-5"
                                 type="checkbox" 
                                 name="rent" 
-                                id="rent" 
+                                id="rent"
+                                onChange={ onInputChange }
+                                checked={ formData.type === 'rent' }
                             />
                             <span className="font-semibold">
                                 Rent
@@ -163,7 +221,9 @@ const CreateListing = () => {
                                 className="w-5"
                                 type="checkbox" 
                                 name="parking" 
-                                id="parking" 
+                                id="parking"
+                                onChange={ onInputChange }
+                                checked={ formData.parking }
                             />
                             <span className="font-semibold">
                                 Parking Spot
@@ -174,7 +234,9 @@ const CreateListing = () => {
                                 className="w-5"
                                 type="checkbox" 
                                 name="furnished" 
-                                id="furnished" 
+                                id="furnished"
+                                onChange={ onInputChange }
+                                checked={ formData.furnished }
                             />
                             <span className="font-semibold">
                                 Furnished
@@ -186,6 +248,8 @@ const CreateListing = () => {
                                 type="checkbox" 
                                 name="offer" 
                                 id="offer" 
+                                onChange={ onInputChange }
+                                checked={ formData.offer }
                             />
                             <span className="font-semibold">
                                 Offer
@@ -200,7 +264,9 @@ const CreateListing = () => {
                                 id="bedrooms" 
                                 className="border border-gray-300 p-2 rounded-md" 
                                 min="1"
-                                max="10" 
+                                max="10"
+                                onChange={ onInputChange }
+                                value={ formData.bedrooms }
                                 />
                             <label htmlFor="bedrooms" className="font-semibold">
                                 Bedrooms
@@ -214,6 +280,8 @@ const CreateListing = () => {
                                 className="border border-gray-300 p-2 rounded-md" 
                                 min="1"
                                 max="10" 
+                                onChange={ onInputChange }
+                                value={ formData.bathrooms }
                                 />
                             <label htmlFor="bathrooms" className="font-semibold">
                                 Bathrooms
@@ -222,35 +290,43 @@ const CreateListing = () => {
                         <div className="flex items-center gap-4">
                             <input 
                                 type="number" 
-                                name="price" 
-                                id="price" 
+                                name="regularPrice" 
+                                id="regularPrice" 
                                 className="border border-gray-300 p-2 rounded-md" 
-                                min="1"
-                                max="10" 
+                                min="1000"
+                                max="100000"
+                                onChange={ onInputChange }
+                                value={ formData.regularPrice }
                                 />
-                            <label htmlFor="price" className="font-semibold flex flex-col items-center">
+                            <label htmlFor="regularPrice" className="font-semibold flex flex-col items-center">
                                 Regular Price
                                 <span className="text-sm">
                                     ($ / Month)
                                 </span>
                             </label>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <input 
-                                type="number" 
-                                name="discounted" 
-                                id="discounted" 
-                                className="border border-gray-300 p-2 rounded-md" 
-                                min="1"
-                                max="10" 
-                                />
-                            <label htmlFor="discounted" className="font-semibold flex flex-col items-center">
-                                Discounted Price 
-                                <span className="text-sm">
-                                    ($ / Month)
-                                </span>
-                            </label>
-                        </div>
+                        {
+                            formData.offer && (
+                            <div className="flex items-center gap-4">
+                                <input 
+                                    type="number" 
+                                    name="discountPrice" 
+                                    id="discountPrice" 
+                                    className="border border-gray-300 p-2 rounded-md" 
+                                    min="0"
+                                    max="10000" 
+                                    onChange={ onInputChange }
+                                    value={ formData.discountPrice }
+                                    />
+                                <label htmlFor="discountPrice" className="font-semibold flex flex-col items-center">
+                                    Discounted Price 
+                                    <span className="text-sm">
+                                        ($ / Month)
+                                    </span>
+                                </label>
+                            </div>
+                            )
+                        }
                     </div>
                 </div>
                 <div className="flex flex-col flex-1 gap-4">
@@ -312,8 +388,22 @@ const CreateListing = () => {
                         ))
                     }
                     <button
-                        className="bg-slate-500 text-white p-3 rounded-md hover:bg-slate-600 self-center w-full">
-                        Create Listing
+                        className="bg-slate-500 text-white p-3 rounded-md hover:bg-slate-600 self-center w-full"
+                        disabled={ isLoading }
+                        >
+                        {
+                            isLoading ? (
+                                <div className="flex items-center justify-center">
+                                    <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                    </svg>
+                                    <span>Loading...</span>
+                                </div>
+                            ) : (
+                                'Create Listing'
+                            )
+                        }
                     </button>
                 </div>
             </form>

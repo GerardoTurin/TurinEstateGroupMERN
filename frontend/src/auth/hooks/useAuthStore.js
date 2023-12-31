@@ -174,7 +174,6 @@ const useAuthStore = () => {
 
 
     const startLogout = async () => {
-            
             try {
                 const res = await fetch('/api/user/logout', {
                     method: 'GET',
@@ -188,7 +187,6 @@ const useAuthStore = () => {
     
                 if (data.ok) {
                     dispatch(onLogout());
-    
                 } else {
                     
                     const errorMessage = data.msg;
