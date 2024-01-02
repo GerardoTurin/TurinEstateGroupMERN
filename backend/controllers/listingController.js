@@ -3,7 +3,7 @@ import Listing from "../models/listingModel.js";
 
 
 
-
+//!POST - Crear un nuevo listing
 const createListing = async (req, res) => {
 
     const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, furnished, parking, type, offer, imageUrls  } = req.body;
@@ -52,6 +52,37 @@ const createListing = async (req, res) => {
 
 
 
+//!GET - Obtener todos los listings de un usuario
+const getListingsUser = async (req, res) => {
+    if (req.params.id === req.user.id) {
+    
+        try {
+            const listings = await Listing.find({ userRef: req.params.id });
+    
+            return res.status(200).json({
+                ok: true,
+                listings,
+            });
+    
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                msg: "Error getting listings",
+            });
+        };
+    }   else {
+        return res.status(400).json({
+            ok: false,
+            msg: "No puedes obtener tus propios listings",
+        });
+    };
+};
+
+
+
+
 export {
-    createListing
+    createListing,
+    getListingsUser,
 };
