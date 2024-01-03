@@ -6,6 +6,7 @@ import { app } from "../../firebase";
 import SignOut from "../components/SignOut";
 import DeleteAccount from "../components/DeleteAccount";
 import { Link } from "react-router-dom";
+import ShowListings from "../components/ShowListings";
 
 const Profile = () => {
     const fileRef = useRef(undefined);
@@ -185,10 +186,11 @@ const Profile = () => {
                     Create Listing
                 </Link>
             </form>
-            <div className="flex mt-3 justify-between">
+            <div className="flex my-3 justify-between">
                 <DeleteAccount />
                 <SignOut />
             </div>
+            <ShowListings />
         </div>
     )
 };

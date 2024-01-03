@@ -41,10 +41,30 @@ const useEstateStore = () => {
 
 
 
+    const startGetListingsUser = async (userId) => {
+        try {
+            const res = await fetch(`/api/listing/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error signing up, contact the administrator');
+        }
+    };
+
+
 
     return {
         user,
-        startCreateListing
+        startCreateListing,
+        startGetListingsUser
     };
 };
 
