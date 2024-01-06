@@ -3,7 +3,7 @@ import { body, param, query } from 'express-validator';
 import existingEmail from '../helpers/existingEmail.js';
 import validateFields from '../middlewares/validateFields.js';
 import checkAuth from '../middlewares/authCheck.js';
-import { createListing, getListingsUser, deleteListing } from '../controllers/listingController.js';
+import { createListing, getListingsUser, deleteListing, updateListing } from '../controllers/listingController.js';
 
 
 
@@ -28,6 +28,13 @@ listingRouter.get('/:id',
 listingRouter.delete('/delete/:id', 
                     checkAuth,
                     deleteListing);
+
+
+
+//! PUT - Update Listing
+listingRouter.patch('/update/:id', 
+                    checkAuth,
+                    updateListing);
 
 
 export default listingRouter;
