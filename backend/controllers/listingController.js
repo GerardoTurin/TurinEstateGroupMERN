@@ -81,8 +81,50 @@ const getListingsUser = async (req, res) => {
 
 
 
+//! DELETE - Eliminar un listing
+
+const deleteListing = async (req, res) => {
+    const listingId = req.params.id;
+
+    try {
+        const listing = await Listing.findById( listingId );
+
+        if ( !listing ) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Not listing found",
+            });
+        };
+
+        if ( req.user.id.toString() !== listing.userRef.toString() ) {
+            return res.status(401).json({
+                ok: false,
+                msg: "You can't delete this listing",
+            });
+        };
+
+        const deleteListing = await Listing.findByIdAndDelete( listingId );
+
+        return res.status(200).json({
+            ok: true,
+            msg: "Deleted listing",
+            deleteListing,
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "Error deleting listing",
+        });
+    };
+};
+
+
+
 
 export {
     createListing,
     getListingsUser,
+    deleteListing,
 };

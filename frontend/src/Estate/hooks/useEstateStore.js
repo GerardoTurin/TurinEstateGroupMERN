@@ -60,11 +60,38 @@ const useEstateStore = () => {
     };
 
 
+    const startDeleteListing = async (listingId) => {
+        try {
+            const res = await fetch(`/api/listing/delete/${listingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            if (data.ok) {
+                alertify.success(`Deleted listing`);
+                
+            } else {
+                const errorMessage = data.msg;
+                alertify.error(`Error: ${errorMessage}`);
+            }
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error signing up, contact the administrator');
+        }
+    };
+
+
 
     return {
         user,
         startCreateListing,
-        startGetListingsUser
+        startGetListingsUser,
+        startDeleteListing,
     };
 };
 

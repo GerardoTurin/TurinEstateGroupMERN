@@ -3,7 +3,7 @@ import useEstateStore from "../hooks/useEstateStore";
 import { Link } from "react-router-dom";
 
 const ShowListings = () => {
-    const { user, startGetListingsUser } = useEstateStore();
+    const { user, startGetListingsUser, startDeleteListing } = useEstateStore();
     const [listings, setListings] = useState([]);
     const { _id } = user;
 
@@ -16,8 +16,18 @@ const ShowListings = () => {
         }
     };
 
-
     console.log(listings);
+    
+
+    const handleDeleteListing = async (id) => {
+        try {
+            await startDeleteListing(id);
+            const data = await startGetListingsUser(_id);
+            setListings(data.listings);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 
     return (
@@ -56,7 +66,9 @@ const ShowListings = () => {
                                         <button className=" bg-slate-500 text-white rounded-md p-3 w-full">
                                             Edit
                                         </button>
-                                        <button className=" bg-red-500 text-white rounded-md p-3 w-full">
+                                        <button
+                                            onClick={ () => handleDeleteListing(listing._id) }
+                                            className=" bg-red-500 text-white rounded-md p-3 w-full">
                                             Delete
                                         </button>
                                     </div>

@@ -3,7 +3,7 @@ import { body, param, query } from 'express-validator';
 import existingEmail from '../helpers/existingEmail.js';
 import validateFields from '../middlewares/validateFields.js';
 import checkAuth from '../middlewares/authCheck.js';
-import { createListing, getListingsUser } from '../controllers/listingController.js';
+import { createListing, getListingsUser, deleteListing } from '../controllers/listingController.js';
 
 
 
@@ -22,6 +22,12 @@ listingRouter.post('/create',
 listingRouter.get('/:id', 
                     checkAuth,
                     getListingsUser);
+
+
+//! DELETE - Delete Listing
+listingRouter.delete('/delete/:id', 
+                    checkAuth,
+                    deleteListing);
 
 
 export default listingRouter;
