@@ -7,6 +7,7 @@ import PrivateRoute from "../auth/components/PrivateRoute";
 import Profile from "../Estate/pages/Profile";
 import Header from "../Estate/components/Header";
 import CreateListing from "../Estate/pages/CreateListing";
+import UpdateListing from "../Estate/pages/UpdateListing";
 
 const AppRouter = () => {
     return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
                 <Route element={ <PrivateRoute /> }>
                     <Route path="/profile" element={ <Profile /> } />
                     <Route path="/createlisting" element={ <CreateListing /> } />
+                    <Route path="/editlisting/:listingId" element={ <UpdateListing /> } />
                 </Route>
                 <Route path="*" element={ <h1>Not found</h1> } />
             </Routes>

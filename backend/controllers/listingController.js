@@ -178,10 +178,42 @@ const updateListing = async (req, res) => {
 
 
 
+//! GET - Obtener listing por ID
+
+const getListingById = async (req, res) => {
+
+    try {
+        const listing = await Listing.findById( req.params.id );
+
+        if ( !listing ) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Not listing found",
+            });
+        };
+
+        return res.status(200).json({
+            ok: true,
+            msg: "ListingID successfully obtained",
+            listing,
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "Error getting listing",
+        });
+    };
+};
+
+
+
 
 export {
     createListing,
     getListingsUser,
     deleteListing,
     updateListing,
+    getListingById,
 };

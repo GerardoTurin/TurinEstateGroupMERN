@@ -87,11 +87,69 @@ const useEstateStore = () => {
 
 
 
+
+    const startGetListingById = async (listingId) => {
+        try {
+            const res = await fetch(`/api/listing/get-id/${listingId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error signing up, contact the administrator');
+        }
+    };
+
+
+
+    const startUpdateListing = async (listingId, formData) => {
+        try {
+            const res = await fetch(`/api/listing/update/${listingId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    userRef: user._id
+                
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.ok) {
+                alertify.success(`Listing updated`);
+                navigate('/');
+                
+            } else {
+                const errorMessage = data.msg;
+                alertify.error(`Error signing up: ${errorMessage}`);
+            }
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error signing up, contact the administrator');
+        }
+    };
+
+
+
+
     return {
         user,
         startCreateListing,
         startGetListingsUser,
         startDeleteListing,
+        startGetListingById,
+        startUpdateListing
     };
 };
 

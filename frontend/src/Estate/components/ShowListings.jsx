@@ -63,9 +63,11 @@ const ShowListings = () => {
                                         </p>
                                     </Link>
                                     <div className="flex flex-col items-center gap-3">
-                                        <button className=" bg-slate-500 text-white rounded-md p-3 w-full">
-                                            Edit
-                                        </button>
+                                        <Link to={ `/editlisting/${ listing._id }` }>
+                                            <button className=" bg-slate-500 text-white rounded-md p-3 w-full">
+                                                Edit
+                                            </button>
+                                        </Link>
                                         <button
                                             onClick={ () => handleDeleteListing(listing._id) }
                                             className=" bg-red-500 text-white rounded-md p-3 w-full">
