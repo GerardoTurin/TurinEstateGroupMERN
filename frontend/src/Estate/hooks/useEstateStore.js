@@ -25,7 +25,7 @@ const useEstateStore = () => {
 
             if (data.ok) {
                 alertify.success(`Thanks for signing up, now check your email to confirm your account`);
-                navigate('/');
+                navigate(`/listing/${data.listing._id}`);
                 
             } else {
                 const errorMessage = data.msg;
@@ -126,7 +126,7 @@ const useEstateStore = () => {
 
             if (data.ok) {
                 alertify.success(`Listing updated`);
-                navigate('/');
+                navigate(`/listing/${listingId}`);
                 
             } else {
                 const errorMessage = data.msg;

@@ -124,7 +124,7 @@ const CreateListing = () => {
 
 
 
-    const handleSubmit = (evt) => {
+    const handleSubmit = async (evt) => {
         evt.preventDefault();
         setIsLoading(true);
         try {
@@ -136,7 +136,7 @@ const CreateListing = () => {
                 setImageErrorMsg('Discounted price cannot be greater than regular price');
                 return;
             }
-            startCreateListing( formData );
+            await startCreateListing( formData );
         } catch (error) {
             console.log(error);
         }

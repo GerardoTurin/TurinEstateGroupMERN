@@ -167,6 +167,7 @@ const UpdateListing = () => {
                 return;
             }
             await startUpdateListing( params.listingId, formData );
+            
         } catch (error) {
             console.log(error);
         }

@@ -48,7 +48,7 @@ const ShowListings = () => {
                         {
                             listings.map(listing => (
                                 <div key={ listing._id } className="flex border border-gray-300 rounded-md p-3 justify-between items-center gap-4">
-                                    <Link to={ `/listings/${ listing._id }` }>
+                                    <Link to={ `/listing/${ listing._id }` }>
                                         <img
                                             src={ listing.imageUrls[0] }
                                             alt={ listing.name }
@@ -57,7 +57,7 @@ const ShowListings = () => {
                                     </Link>
                                     <Link 
                                         className="text-xl font-semibold flex-1 hover:underline cursor-pointer truncate"
-                                        to={ `/listings/${ listing._id }` }>
+                                        to={ `/listing/${ listing._id }` }>
                                         <p>
                                             { listing.name }
                                         </p>
