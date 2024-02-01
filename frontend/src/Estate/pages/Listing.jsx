@@ -15,6 +15,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import Contact from "../components/Contact";
 
 const Listing = () => {
     SwiperCore.use([Navigation]);
@@ -37,7 +38,8 @@ const Listing = () => {
         getListing();
     }, [params]);   // eslint-disable-line react-hooks/exhaustive-deps
 
-    console.log(listing);
+    //console.log(user);
+    //console.log(listing);
 
     return (
         <main>
@@ -136,13 +138,13 @@ const Listing = () => {
                         </ul>
                         {user && listing.userRef !== user._id && !contact && (
                             <button
-                                onClick={() => setContact(true)}
+                                onClick={ () => setContact(true) }
                                 className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'
                             >
                                 Contact landlord
                             </button>
                         )}
-                        {/* {contact && <Contact listing={listing} />} */}
+                        {contact && <Contact listing={ listing } />}
                     </div>
                 </>
             }

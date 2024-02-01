@@ -10,6 +10,7 @@ import {
         updateUser,
         logOutUser,
         deleteUser, 
+        getUserById
                 } from '../controllers/userController.js';
 import checkAuth from '../middlewares/authCheck.js';
 
@@ -70,6 +71,13 @@ userRouter.get('/logout', logOutUser);
 userRouter.delete('/deleteuser/:id', 
                 checkAuth,
                 deleteUser);
+
+
+
+//! GET - Get User By Id
+userRouter.get('/:id',
+                checkAuth,
+                getUserById);
 
 
 

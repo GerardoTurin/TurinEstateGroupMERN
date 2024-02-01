@@ -141,6 +141,27 @@ const useEstateStore = () => {
     };
 
 
+    const startGetUserById = async (userId) => {
+        try {
+            const res = await fetch(`/api/user/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('res', res);
+
+            const data = await res.json();
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            alertify.error('Error signing up, contact the administrator');
+        }
+    };
+
+
 
 
     return {
@@ -149,7 +170,8 @@ const useEstateStore = () => {
         startGetListingsUser,
         startDeleteListing,
         startGetListingById,
-        startUpdateListing
+        startUpdateListing,
+        startGetUserById
     };
 };
 

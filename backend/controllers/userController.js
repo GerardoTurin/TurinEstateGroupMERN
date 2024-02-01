@@ -213,7 +213,6 @@ const logOutUser = async (req, res) => {
 //! Delete User
 
 const deleteUser = async (req, res) => {
-
     const user = await userModel.findById(req.params.id);
 
     if ( !user ) {
@@ -234,6 +233,39 @@ const deleteUser = async (req, res) => {
 };
 
 
+
+
+//GET - User by ID
+const getUserById = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.id);
+    
+        if ( !user ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'User not found'
+            });
+        };
+    
+        return res.status(200).json({
+            ok: true,
+            msg: 'User Obtained',
+            user
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Please contact the administrator'
+        });
+    }
+
+};
+
+
+
+
 export {
     getUsers,
     SignUp,
@@ -241,5 +273,6 @@ export {
     googleSignIn,
     updateUser,
     logOutUser,
-    deleteUser
+    deleteUser,
+    getUserById
 };
