@@ -8,12 +8,13 @@ import { OAuth2Client } from "google-auth-library";
 
 
 
-const getUsers = (req, res) => {
-    //const users = await userModel.find();
+const getUsers = async (req, res) => {
+    const users = await userModel.find();
 
     res.json({
         ok: true,
         msg: 'Users Obtained',
+        users
     });
 };
 

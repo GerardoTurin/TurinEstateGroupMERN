@@ -52,9 +52,6 @@ const Listing = () => {
             {
                 !loading && listing &&
                 <>
-                    <h1 className="text-4xl font-bold mb-4">
-                        {listing.name}
-                    </h1>
                     <Swiper
                         navigation
                     >

@@ -15,8 +15,6 @@ const ShowListings = () => {
             console.log(error);
         }
     };
-
-    console.log(listings);
     
 
     const handleDeleteListing = async (id) => {

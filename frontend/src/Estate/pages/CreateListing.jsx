@@ -45,6 +45,8 @@ const CreateListing = () => {
         //const files = evt.target.files;
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
 
+        console.log(files);
+
         
         // No se pueden subir mas de 6 imagenes
         if (files.length + formData.imageUrls.length > 6) {

@@ -50,6 +50,119 @@ const createListing = async (req, res) => {
 };
 
 
+//! GET - Obtener todos los listings
+
+const getAllListings = async (req, res) => {
+    //const { limit, startIndex, offer, furnished, parking, type, searchTerm, sort, order } = req.query;
+
+    try {
+        const limit = parseInt(req.query.limit || 9);
+        const stratIndex = parseInt(req.query.startIndex || 0);
+        
+        
+        let offer = req.query.offer;
+        if (offer === undefined || offer === 'false') {
+            offer = { $in: [false, true] };
+        };
+
+
+        let furnished = req.query.furnished;
+        if (furnished === undefined || furnished === 'false') {
+            furnished = { $in: [false, true] };
+        };
+
+
+        let parking = req.query.parking;
+        if (parking === undefined || parking === 'false') {
+            parking = { $in: [false, true] };
+        };
+
+
+        let type = req.query.type;
+
+        if (type === undefined || type === 'all') {   
+            type = { $in: ["sale", "rent"] };   
+        };
+
+
+        const searchTerm = req.query.searchTerm || '';     // searchTerm: termino de busqueda
+        const sort = req.query.sort || 'createdAt'; // createdAt, discountPrice, regularPrice
+        const order = req.query.order || 'desc'; // asc, desc
+
+
+        const allListings = await Listing.find({
+            name: { $regex: searchTerm, $options: 'i' },    // i: case insensitive
+            offer,
+            furnished,
+            parking,
+            type,
+        })
+        .sort({ [sort]: order })    // sort: ordenar
+        .limit(limit)   // limit: limitar
+        .skip(stratIndex);  // skip: saltar
+
+        return res.status(200).json({
+            ok: true,
+            allListings,
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "Error getting all listings",
+        });
+    };
+
+};
+
+
+
+
+/* const getAllListings = async (req, res) => {
+    const { limit, startIndex, offer, furnished, parking, type, searchTerm, sort, order } = req.query;
+
+    const limitPerPage = parseInt(limit) || 10;
+    const page = parseInt(startIndex) || 0;
+    let filter = {};
+    let sortQuery = {};
+
+    if (offer) filter.offer = offer === "true";
+    if (furnished) filter.furnished = furnished === "true";
+    if (parking) filter.parking = parking === "true";
+    if (type) filter.type = type;
+    if (searchTerm) filter.name = { $regex: searchTerm, $options: "i" };
+
+    if (sort) {
+        sortQuery[sort] = order === "desc" ? -1 : 1;
+    };
+
+    try {
+        const listings = await Listing.find(filter)
+            .limit(limitPerPage)
+            .skip(page * limitPerPage)
+            .sort(sortQuery);
+
+        const count = await Listing.countDocuments(filter); // Cantidad de listings
+
+        res.status(200).json({
+            ok: true,
+            listings,
+            count,
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: "Error getting listings",
+        });
+
+    }
+}; */
+
+
 
 
 //!GET - Obtener todos los listings de un usuario
@@ -210,10 +323,14 @@ const getListingById = async (req, res) => {
 
 
 
+
+
+
 export {
     createListing,
     getListingsUser,
     deleteListing,
     updateListing,
     getListingById,
+    getAllListings,
 };
