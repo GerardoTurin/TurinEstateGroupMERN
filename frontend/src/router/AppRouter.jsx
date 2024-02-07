@@ -9,6 +9,7 @@ import Header from "../Estate/components/Header";
 import CreateListing from "../Estate/pages/CreateListing";
 import UpdateListing from "../Estate/pages/UpdateListing";
 import Listing from "../Estate/pages/Listing";
+import Search from "../Estate/pages/Search";
 
 const AppRouter = () => {
     return (
@@ -19,6 +20,7 @@ const AppRouter = () => {
                 <Route path="/signin" element={ <SignIn /> } />
                 <Route path="/" element={ <Home /> } />
                 <Route path="/about" element={ <About /> } />
+                <Route path="/search" element={ <Search /> } />
                 <Route path="/listing/:listingId" element={ <Listing /> } />
                 <Route element={ <PrivateRoute /> }>
                     <Route path="/profile" element={ <Profile /> } />

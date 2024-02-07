@@ -9,8 +9,6 @@ import useForm from "../../auth/hooks/useForm";
 
 const Header = () => {
     const [ searchTerm, setSearchTerm ] = useState(''); // Agrega un estado para el campo de búsqueda
-    //const { form, onChange } = useForm({ search: '' }); // Agrega un estado para el campo de búsqueda
-    //const { search } = useParams(); // Obtiene el parámetro de búsqueda de la URL
     const navigate = useNavigate(); // Obtiene la función de navegación de la URL
 
 
