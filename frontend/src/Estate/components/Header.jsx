@@ -2,7 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useForm from "../../auth/hooks/useForm";
+//import useForm from "../../auth/hooks/useForm";
 
 
 
@@ -14,7 +14,7 @@ const Header = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        const urlParams = new URLSearchParams(window.location.search);  // Crea un objeto URLSearchParams con la búsqueda de la URL
+        const urlParams = new URLSearchParams(location.search);  // Crea un objeto URLSearchParams con la búsqueda de la URL
         urlParams.set('searchTerm', searchTerm);  // Actualiza el parámetro de búsqueda
 
         const searhQuery = urlParams.toString();  // Convierte el objeto URLSearchParams en una cadena de consulta
@@ -25,7 +25,7 @@ const Header = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);  // Crea un objeto URLSearchParams con la búsqueda de la URL
         const searchTermFromUrl = urlParams.get('searchTerm');  // Obtiene el parámetro de búsqueda de la URL
-        setSearchTerm(searchTermFromUrl);  // Actualiza el estado con el parámetro de búsqueda de la URL
+        setSearchTerm(searchTermFromUrl || '');  // Actualiza el estado con el parámetro de búsqueda de la URL
     }, [location.search]);  // Ejecuta el efecto cuando cambie la búsqueda de la URL
 
 
