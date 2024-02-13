@@ -1,178 +1,17 @@
-import { useEffect, useState } from "react";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "../../firebase";
-import useEstateStore from "../hooks/useEstateStore";
-import { useParams } from "react-router-dom";
+import useUpdateListing from "../hooks/useUpdateListing";
 
 const UpdateListing = () => {
-    const [files, setFiles] = useState([]);
-    const [ imageErrorMsg, setImageErrorMsg ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState( false );
-    const { startGetListingById, startUpdateListing } = useEstateStore();
-    const params = useParams();
-    const [formData, setFormData] = useState({
-        imageUrls: [],
-        name: '',
-        address: '',
-        description: '',
-        sale: false,
-        type: 'rent',
-        parking: false,
-        furnished: false,
-        offer: false,
-        bedrooms: 1,
-        bathrooms: 1,
-        regularPrice: 1000,
-        discountPrice: 0,
-    });
-
-    useEffect(() => {
-        const { listingId } = params;
-        
-        const getListing = async () => {
-            const data = await startGetListingById( listingId );
-            console.log(data);
-            setFormData({
-                imageUrls: data.listing.imageUrls,
-                name: data.listing.name,
-                address: data.listing.address,
-                description: data.listing.description,
-                sale: data.listing.sale,
-                type: data.listing.type,
-                parking: data.listing.parking,
-                furnished: data.listing.furnished,
-                offer: data.listing.offer,
-                bedrooms: data.listing.bedrooms,
-                bathrooms: data.listing.bathrooms,
-                regularPrice: data.listing.regularPrice,
-                discountPrice: data.listing.discountPrice,
-            });
-        };
-
-        getListing();
-
-
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const onInputChange = (evt) => {
-        if (evt.target.id === 'sale' || evt.target.id === 'rent') {
-            setFormData({ ...formData, type: evt.target.id });
-        }
-
-        if (evt.target.id === 'parking' || evt.target.id === 'furnished' || evt.target.id === 'offer') {
-            setFormData({ ...formData, [evt.target.id]: evt.target.checked });
-        }
-
-        if (evt.target.type === 'number' || evt.target.type === 'text' || evt.target.type === 'textarea') {
-            setFormData({ ...formData, [evt.target.name]: evt.target.value });  //
-        }
-    };
-
-
-
-    const handleFileChange = (evt) => {
-        const { files } = evt.target;
-        //const files = evt.target.files;
-        const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
-
-        
-        // No se pueden subir mas de 6 imagenes
-        if (files.length + formData.imageUrls.length > 6) {
-            setImageErrorMsg('You can only upload 6 images');
-        } else {
-            setFormData({ ...formData, imageUrls: formData.imageUrls.concat(imageUrls) });
-            setImageErrorMsg(false);
-            setFiles( files );
-        }
-    };
-
-
-    const handleImageSubmit = () => {
-        if (files.length >= 1 && files.length +  formData.imageUrls.length <= 6) {
-            setIsLoading(true);
-            setImageErrorMsg(false);
-            const promises = [];
-
-            for (let i = 0; i < files.length; i++) {
-                promises.push( storeImages( files[i] ) );
-            }
-
-            Promise.all(promises).then( (urls) => {
-                console.log(urls);
-                //setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
-                setImageErrorMsg(false);
-                setIsLoading(false);
-
-            }).catch( (error) => {
-                console.log(error);
-                setImageErrorMsg('Error uploading images (2 mb max per image)');
-                setIsLoading(false);
-            })
-            
-        } else {
-            setImageErrorMsg('You can only upload 6 images');
-            setIsLoading(false);
-        }
-    };
-
-
-
-    const storeImages = async (file) => {
-        return new Promise( ( resolve, reject ) => {
-            const storage = getStorage(app);
-            const fileName = new Date().getTime() + file.name;  // 1629781231231.jpg
-            const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    // progress
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
-                },
-                (error) => {
-                    // error
-                    reject(error);
-                    console.log(error);
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        resolve(downloadURL)
-                        console.log('File available at', downloadURL);
-                        //setFormData({ ...formData, photo: downloadURL });
-                    });
-                }
-            );
-        });
-    };
-
-
-
-    const handleRemoveImage = ( index ) => {
-        setFormData({ ...formData, imageUrls: formData.imageUrls.filter( (url, i) => i !== index ) });
-    }; 
-
-
-
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        setIsLoading(true);
-        try {
-            if (formData.imageUrls.length < 1) {
-                setImageErrorMsg('You need to upload at least 1 image');
-                return;
-            }
-            if (formData.regularPrice < formData.discountPrice) {
-                setImageErrorMsg('Discounted price cannot be greater than regular price');
-                return;
-            }
-            await startUpdateListing( params.listingId, formData );
-            
-        } catch (error) {
-            console.log(error);
-        }
-        setIsLoading(false);
-    };
+    const { 
+        imageErrorMsg,
+        isLoading,
+        formData,
+        onInputChange,
+        handleFileChange,
+        handleImageSubmit,
+        handleRemoveImage,
+        handleSubmit
+    } = useUpdateListing();
+    
 
 
     return (
@@ -389,7 +228,7 @@ const UpdateListing = () => {
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                                             </svg>
-                                            <span>Loading...</span>
+                                            <span>Updating...</span>
                                         </div>
                                     ) : (
                                         'Upload'
@@ -403,7 +242,7 @@ const UpdateListing = () => {
                     {
                         formData.imageUrls?.length > 0 &&
                         formData.imageUrls.map( (url, index) => (
-                            <div key={ index } className="flex justify-between p-3 border rounded-md items-center">
+                            <div key={ url } className="flex justify-between p-3 border rounded-md items-center">
                                 <img
                                     src={ url }
                                     alt="listing"
@@ -429,7 +268,7 @@ const UpdateListing = () => {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                                     </svg>
-                                    <span>Loading...</span>
+                                    <span>Updating...</span>
                                 </div>
                             ) : (
                                 'Update Listing'

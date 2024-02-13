@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useEstateStore from "../hooks/useEstateStore";
+import CardListing from "../components/CardListing";
 
 
 
 
 const Search = () => {
-        
     const { startGetAllListings } = useEstateStore();
     const navigate = useNavigate();
     const [ loading, setLoading ] = useState(false);
@@ -232,10 +232,27 @@ const Search = () => {
                 </form>
 
             </div>
-            <div className="">
+            <div className="flex-1">
                 <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
-                    Results
+                    Results:
                 </h1>
+                <div className="p-7 flex flex-wrap gap-4">
+                    { !loading && listings.length === 0 && (
+                        <h2 className="text-2xl font-semibold text-slate-700">
+                            No listing found
+                        </h2>
+                    ) }
+                    { loading && (
+                        <h2 className="text-2xl font-semibold text-slate-700 text-center w-full">
+                            Loading...
+                        </h2>
+                    ) }
+                    { !loading && listings.length > 0 && (
+                        listings.map(( listing ) => (
+                            <CardListing key={ listing._id } listing={ listing } />
+                        ))
+                    ) }
+                </div>
             </div>
         </div>
     )

@@ -6,11 +6,16 @@ import Listing from "../models/listingModel.js";
 //!POST - Crear un nuevo listing
 const createListing = async (req, res) => {
 
-    const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, furnished, parking, type, offer, imageUrls  } = req.body;
+    const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, furnished, parking, type, offer, imageUrls, routeImages  } = req.body;
     console.log(req.body);
 
     // Campos obligatorios
-    if ( name === undefined || description === undefined || address === undefined || regularPrice === undefined || discountPrice === undefined || bathrooms === undefined || bedrooms === undefined || furnished === undefined || parking === undefined || type === undefined || offer === undefined || imageUrls === undefined ) {
+    if ( name === undefined || description === undefined || 
+        address === undefined || regularPrice === undefined || 
+        discountPrice === undefined || bathrooms === undefined || 
+        bedrooms === undefined || furnished === undefined || 
+        parking === undefined || type === undefined || 
+        offer === undefined || imageUrls === undefined || routeImages === undefined ) {
         return res.status(400).json({
             ok: false,
             msg: "Completa todos los campos son obligatorios",
@@ -32,6 +37,7 @@ const createListing = async (req, res) => {
             type,
             offer,
             imageUrls,
+            routeImages,
         });
 
 

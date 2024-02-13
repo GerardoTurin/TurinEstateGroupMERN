@@ -52,6 +52,10 @@ const listingSchema = new Schema({
         type: Array,
         required: true,
     },
+    routeImages: {
+        type: Array,
+        required: true,
+    },
     userRef: {
         type: Schema.Types.ObjectId,
         ref: 'User',
