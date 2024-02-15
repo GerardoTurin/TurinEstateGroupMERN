@@ -1,114 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useEstateStore from "../hooks/useEstateStore";
 import CardListing from "../components/CardListing";
-
-
+import useSearch from "../hooks/useSearch";
 
 
 const Search = () => {
-    const { startGetAllListings } = useEstateStore();
-    const navigate = useNavigate();
-    const [ loading, setLoading ] = useState(false);
-    const [ listings, setListings ] = useState([]);
-    const [ sidebarData, setSidebarData ] = useState({
-        searchTerm: '',
-        type: 'all',
-        parking: false,
-        furnished: false,
-        offer: false,
-        sort: 'created_at',
-        order: 'desc'
-    });
-
-
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(location.search); // Crea un objeto URLSearchParams con la búsqueda de la URL
-        const searchTerm = urlParams.get('searchTerm') || '';   // Obtiene el parámetro de búsqueda de la URL.
-        const type = urlParams.get('type') || 'all';
-        const parking = urlParams.get('parking') === 'true' || false;
-        const furnished = urlParams.get('furnished') === 'true' || false;
-        const offer = urlParams.get('offer') === 'true' || false;
-        const sort = urlParams.get('sort') || 'created_at';
-        const order = urlParams.get('order') || 'desc';
-
-        setSidebarData({
-            searchTerm,
-            type,
-            parking,
-            furnished,
-            offer,
-            sort,
-            order
-        });
-
-
-        const fetchListings = async () => {
-            setLoading(true);
-            const searchQuery = urlParams.toString();
-            const data = await startGetAllListings(searchQuery);
-            console.log(data.allListings);
-            setListings(data.allListings);
-            setLoading(false);
-
-        };
-        fetchListings();
-
-    }, [location.search]);
-
-
-
-    const onInputChange = ( evt ) => {
-        const { id, type, checked, value } = evt.target;
-        
-        if ( id === 'all' || id === 'rent' || id === 'sale' ) { //
-            setSidebarData({
-                ...sidebarData,
-                type: id
-            }); 
-        };
-
-        if ( id === 'searchTerm' ) {
-            setSidebarData({
-                ...sidebarData,
-                searchTerm: value
-            });
-        };
-
-        if ( id === 'offer' || id === 'parking' || id === 'furnished' ) {
-            setSidebarData({
-                ...sidebarData,
-                [id]: checked || checked === 'true' ? true : false
-            });
-        };
-
-        if ( id === 'sort_order' ) {
-            const [ sort, order ] = value.split('_');   // Divide el valor del campo de selección en dos partes.
-            setSidebarData({
-                ...sidebarData,
-                sort: sort || 'created_at',
-                order: order || 'desc'
-            });
-        };
-    };
-
-
-    const handleSubmit = ( evt ) => {
-        evt.preventDefault();
-        const urlParams = new URLSearchParams();
-        const { searchTerm, type, parking, furnished, offer, sort, order } = sidebarData;
-        urlParams.append('searchTerm', searchTerm);
-        urlParams.append('type', type);
-        urlParams.append('parking', parking);
-        urlParams.append('furnished', furnished);
-        urlParams.append('offer', offer);
-        urlParams.append('sort', sort);
-        urlParams.append('order', order);
-
-        const searchQuery = urlParams.toString();   // Convierte los parámetros de búsqueda en una cadena de consulta.
-        navigate(`/search?${searchQuery}`);
-    };
+    const { loading, listings, sidebarData, showMore, onInputChange, handleSubmit } = useSearch();
 
 
     return (
@@ -236,7 +131,7 @@ const Search = () => {
                 <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
                     Results:
                 </h1>
-                <div className="p-7 flex flex-wrap gap-4">
+                <div className="p-7 flex flex-col flex-wrap gap-4">
                     { !loading && listings.length === 0 && (
                         <h2 className="text-2xl font-semibold text-slate-700">
                             No listing found
@@ -252,6 +147,14 @@ const Search = () => {
                             <CardListing key={ listing._id } listing={ listing } />
                         ))
                     ) }
+                    {
+                        showMore && (
+                            <button
+                                className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 inline-block sm:w-full sm:mx-0 md:w-1/3 md:mx-auto">
+                                Show More
+                            </button>
+                        )
+                    }
                 </div>
             </div>
         </div>

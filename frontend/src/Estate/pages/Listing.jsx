@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import useEstateStore from "../hooks/useEstateStore";
 import { useParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
+import { Navigation } from 'swiper/modules';
+import 'swiper/swiper-bundle.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import Contact from "../components/Contact";
 import {
     FaBath,
     FaBed,
@@ -9,13 +16,6 @@ import {
     FaParking,
     FaShare,
 } from 'react-icons/fa';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { Navigation } from 'swiper/modules';
-import 'swiper/swiper-bundle.css';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import Contact from "../components/Contact";
 
 const Listing = () => {
     SwiperCore.use([Navigation]);
@@ -38,8 +38,6 @@ const Listing = () => {
         getListing();
     }, [params]);   // eslint-disable-line react-hooks/exhaustive-deps
 
-    //console.log(user);
-    //console.log(listing);
 
     return (
         <main>

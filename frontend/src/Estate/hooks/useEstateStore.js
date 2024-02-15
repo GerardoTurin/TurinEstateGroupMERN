@@ -178,6 +178,7 @@ const useEstateStore = () => {
         } catch (error) {
             console.log(error);
             alertify.error('Error signing up, contact the administrator');
+            return {};
         }
     };
 
