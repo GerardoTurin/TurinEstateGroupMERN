@@ -129,8 +129,6 @@ const useSearch = () => {
             setShowMore(false);
         };
         setListings([...listings, ...data.allListings]);    // Agrega los nuevos listados a la lista existente.
-
-
     };
 
 
@@ -142,7 +140,8 @@ const useSearch = () => {
         showMore,
         setShowMore,
         onInputChange,
-        handleSubmit
+        handleSubmit,
+        onShowMoreClick
     };
 };
 

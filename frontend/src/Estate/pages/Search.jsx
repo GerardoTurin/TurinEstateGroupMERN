@@ -3,7 +3,7 @@ import useSearch from "../hooks/useSearch";
 
 
 const Search = () => {
-    const { loading, listings, sidebarData, showMore, onInputChange, handleSubmit } = useSearch();
+    const { loading, listings, sidebarData, showMore, onInputChange, handleSubmit, onShowMoreClick } = useSearch();
 
 
     return (
@@ -150,6 +150,7 @@ const Search = () => {
                     {
                         showMore && (
                             <button
+                                onClick={ onShowMoreClick }
                                 className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 inline-block sm:w-full sm:mx-0 md:w-1/3 md:mx-auto">
                                 Show More
                             </button>
