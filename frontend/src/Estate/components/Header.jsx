@@ -2,7 +2,6 @@ import { FaSearch } from "react-icons/fa";
 import Navbar from "./Navbar";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-//import useForm from "../../auth/hooks/useForm";
 
 
 
@@ -33,7 +32,7 @@ const Header = () => {
         <header className="bg-gray-300 shadow-md">
             <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
                 <Link to="/">
-                    <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+                    <h1 className="font-bold text-base sm:text-xl flex flex-wrap">
                         <span className="text-red-500">
                             Turin
                         </span>
