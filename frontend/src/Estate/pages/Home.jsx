@@ -1,60 +1,17 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useEstateStore from "../hooks/useEstateStore";
 import SwiperCore from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import 'swiper/css';
 import CardListing from "../components/CardListing";
+import useHomePage from "../hooks/useHomePage";
+
 
 
 const Home = () => {
-    const { startGetAllListings } = useEstateStore();
-    const [ offerListings, setOfferListings ] = useState([]);
-    const [ saleListings, setSaleListings ] = useState([]);
-    const [ rentListings, setRentListings ] = useState([]);
+    const { offerListings, saleListings, rentListings } = useHomePage();
     SwiperCore.use([Navigation]);
-
-    console.log(offerListings);
-    //console.log(saleListings);
-
-    useEffect(() => {
-        const fetchOfferListings = async () => {
-            try{
-                const searchQuery = 'offer=true&limit=4';
-                const data = await startGetAllListings(searchQuery);
-                setOfferListings(data.allListings || []);
-                fetchRentListings();
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-
-        const fetchRentListings = async () => {
-            try {
-                const searchQuery = 'type=rent&limit=4';
-                const data = await startGetAllListings(searchQuery);
-                setRentListings(data.allListings || []);
-                fetchSaleListings();
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        
-        const fetchSaleListings = async () => {
-            try {
-                const searchQuery = 'type=sale&limit=4';
-                const data = await startGetAllListings(searchQuery);
-                setSaleListings(data.allListings || []);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchOfferListings();
-    }, []);
 
 
     return (

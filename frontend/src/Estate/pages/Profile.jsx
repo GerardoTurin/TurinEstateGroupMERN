@@ -1,94 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import useAuthStore from "../../auth/hooks/useAuthStore";
-//import useForm from "../../auth/hooks/useForm";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "../../firebase";
 import SignOut from "../components/SignOut";
 import DeleteAccount from "../components/DeleteAccount";
 import { Link } from "react-router-dom";
 import ShowListings from "../components/ShowListings";
+import useProfile from "../hooks/useProfile";
 
 const Profile = () => {
-    const fileRef = useRef(undefined);
-    const { user, startUpdateUser } = useAuthStore();
-    //const { onInputChange } = useForm( user );
-    const [ file, setFile ] = useState(null);
-    const [ photoPercentage, setPhotoPercentage ] = useState(0);
-    const [ photoErrorMsg, setPhotoErrorMsg ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState( false );
-    const { name, email, photo, googleUser } = user;
-    const [ formData, setFormData ] = useState({
-        name: '',
-        email: '',
-        password: '',
-        photo: ''
-    });
-    
-
-    
-    useEffect(() => {
-        setFormData({ name: name, email: email, password: '', photo: photo });
-    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
-
-
-
-    useEffect(() => {
-        if (file) {
-            handleUploadFile(file);
-        }
-    }, [file]); // eslint-disable-line react-hooks/exhaustive-deps
-
-
-
-    const onInputChange = ({ target }) => {
-        const { name, value } = target;
-
-        setFormData(form => ({
-            ...form,
-            [name]: value
-        }));
-    };
-
-    const handleUploadFile = (file) => {
-        const storage = getStorage(app);
-        const fileName = new Date().getTime() + file.name;  // 1629781231231.jpg
-        const storageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // progress
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                //console.log('Upload is ' + progress + '% done');
-                setPhotoPercentage(Math.round(progress));
-            },
-            (error) => {
-                // error
-                console.log(error);
-                setPhotoErrorMsg(true);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    setFormData({ ...formData, photo: downloadURL });
-                });
-            }
-        );
-    };  
-
-
-
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        setIsLoading( true );
-        
-        try {
-            await startUpdateUser(formData);
-        } catch (error) {
-            console.log(error);
-        }
-        setIsLoading( false );
-    };
+    const { fileRef, 
+        formData, 
+        photoPercentage, 
+        photoErrorMsg, 
+        isLoading,
+        photo,
+        name,
+        email,
+        googleUser,
+        onInputChange, 
+        handleSubmit, 
+        setFile  } = useProfile();
 
     return (
         <div className="p-3 max-w-lg mx-auto">

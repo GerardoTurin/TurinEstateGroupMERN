@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import useEstateStore from "../hooks/useEstateStore";
-import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
@@ -16,27 +13,11 @@ import {
     FaParking,
     FaShare,
 } from 'react-icons/fa';
+import useListing from "../hooks/useListing";
 
 const Listing = () => {
     SwiperCore.use([Navigation]);
-    const [listing, setListing] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [copied, setCopied] = useState(false);
-    const [contact, setContact] = useState(false);
-    const { startGetListingById, user } = useEstateStore();
-    const params = useParams();
-
-    useEffect(() => {
-        const { listingId } = params;
-
-        const getListing = async () => {
-            setLoading(true);
-            const data = await startGetListingById(listingId);
-            setListing(data.listing);
-            setLoading(false);
-        };
-        getListing();
-    }, [params]);   // eslint-disable-line react-hooks/exhaustive-deps
+    const { listing, loading, copied, setCopied, contact, setContact, user } = useListing();
 
 
     return (

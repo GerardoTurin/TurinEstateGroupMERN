@@ -39,7 +39,13 @@ class Server {
 
     middlewares() {
         // Cors
-        this.app.use( cors() ); // use: para usar un middleware
+        this.app.use( cors(
+            {
+                origin: 'http://localhost:5173/',
+                credentials: true,
+                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+            }
+        ) ); // use: para usar un middleware
         
         
         // Lectura y parseo del body
