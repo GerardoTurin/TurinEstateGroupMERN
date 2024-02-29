@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
 
 const CardListing = ({ listing }) => {
+    const priceFinal = listing ? listing.regularPrice - listing.discountPrice : 0;
+
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden w-full sm:w-[330px]">
             <Link to={`/listing/${listing._id}`}>
@@ -26,7 +28,7 @@ const CardListing = ({ listing }) => {
                         $
                         {
                             listing.offer 
-                                ? listing.discountPrice.toLocaleString('en-US') 
+                                ? priceFinal.toLocaleString('en-US')
                                 : listing.regularPrice.toLocaleString('en-US')
                         }
                         { listing.type === 'rent' && ' / month' }

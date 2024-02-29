@@ -156,11 +156,11 @@ const useCreateListing = () => {
         try {
             if (formData.imageUrls.length < 1) {
                 setImageErrorMsg('You need to upload at least 1 image');
-                return;
+                setIsLoading(false);
             }
             if (formData.regularPrice < formData.discountPrice) {
                 setImageErrorMsg('Discounted price cannot be greater than regular price');
-                return;
+                setIsLoading(false);
             }
             await startCreateListing( formData );
         } catch (error) {

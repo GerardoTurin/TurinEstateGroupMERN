@@ -1,68 +1,17 @@
 import { Link } from "react-router-dom";
-import useForm from "../hooks/useForm";
-import useAuthStore from "../hooks/useAuthStore";
-import { useState } from "react";
-import alertify from 'alertifyjs';
 import OAuth from "../components/OAuth";
-
-
-const SignUpFormFields = {
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-
-};
-
+import useSignUpForm from "../hooks/useSignUpForm";
 
 
 const SignUp = () => {
-
-    const { name, email, password, confirmPassword, onInputChange, onResetForm } = useForm( SignUpFormFields );
-    const { startSignUp, validateEmail } = useAuthStore();
-    const [ isLoading, setIsLoading ] = useState( false );
-
-    // si el usuario ya esta autenticado, redirigirlo a la pagina de inicio
-
-
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        setIsLoading( true );
-
-        if ( name.trim() === '' || email.trim() === '' || password.trim() === '' || confirmPassword.trim() === '' ) {
-            alertify.error('All fields are required');
-            setIsLoading( false );
-            return;
-        }
-
-
-        if ( name.trim().length < 2 ) {
-            alertify.error('Name must be at least 2 characters');
-            setIsLoading( false );
-            return;
-        }
-
-
-        if ( !validateEmail( email ) ) {
-            alertify.error('Invalid email');
-            setIsLoading( false );
-            return;
-        }
-
-
-
-        // password y confirmPassword deben ser iguales
-        if ( password !== confirmPassword ) {
-            alertify.error('Passwords do not match');
-            setIsLoading( false );
-            return;
-        }
-
-
-        await startSignUp( name, email, password );
-        onResetForm();
-        setIsLoading( false );
-    };
+    const {    
+        name,
+        email,
+        password,
+        confirmPassword,
+        onInputChange,
+        handleSubmit,
+        isLoading } = useSignUpForm();
 
     return (
         <div className="p-3 max-w-lg mx-auto" onSubmit={ handleSubmit }>
@@ -120,7 +69,7 @@ const SignUp = () => {
 
                 <button 
                     type="submit"
-                    className="bg-slate-500 text-white text-center p-2 rounded-lg mt-3 hover:bg-slate-700"
+                    className="bg-slate-500 text-white text-center p-2 rounded-lg mt-3 hover:bg-slate-700 w-52 mx-auto"
                     disabled={ isLoading }
                     >
                     {

@@ -10,8 +10,7 @@ const UpdateListing = () => {
         handleImageSubmit,
         handleRemoveImage,
         handleSubmit
-    } = useUpdateListing();
-    
+    } = useUpdateListing();    
 
 
     return (
@@ -184,7 +183,7 @@ const UpdateListing = () => {
                                     id="discountPrice" 
                                     className="border border-gray-300 p-2 rounded-md" 
                                     min="0"
-                                    max="10000" 
+                                    max="100000" 
                                     onChange={ onInputChange }
                                     value={ formData.discountPrice }
                                     />

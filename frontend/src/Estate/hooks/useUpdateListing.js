@@ -149,7 +149,7 @@ const useUpdateListing = () => {
 
 
 
-    const handleRemoveImage = ( index ) => {
+    const handleRemoveImage = async ( index ) => {
         const path = formData.routeImages[index];
 
         if (!path) {
@@ -159,15 +159,15 @@ const useUpdateListing = () => {
 
         const storageRef = ref(storage, path);
 
-        deleteObject(storageRef).then(() => {
-            const image = formData.imageUrls.filter( (img, i) => i !== index );
-            const Path = formData.routeImages.filter( (path, i) => i !== index );
-            setFormData({ ...formData, imageUrls: image, routeImages: Path });
+        try {
+            await deleteObject(storageRef);
+            const newImages = formData.imageUrls.filter( (url, i) => i !== index );
+            const newPaths = formData.routeImages.filter( (path, i) => i !== index );
+            setFormData({ ...formData, imageUrls: newImages, routeImages: newPaths });
 
-            console.log('File deleted successfully');
-        }).catch((error) => {
-            console.log('Error deleting file', error);
-        });
+        } catch (error) {
+            console.log(`Error deleting file: ${error}`);
+        }
 
 
     }; 

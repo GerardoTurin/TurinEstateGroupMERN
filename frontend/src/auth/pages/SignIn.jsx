@@ -1,49 +1,10 @@
 import { Link } from "react-router-dom";
-import useAuthStore from "../hooks/useAuthStore";
-import useForm from "../hooks/useForm";
-import { useState } from "react";
-
-
-const SignInFormFields = {
-    email: '',
-    password: ''
-
-};
-
+import useSingInForm from "../hooks/useSingInForm";
 
 
 
 const SignIn = () => {
-
-    const { startSignIn, validateEmail } = useAuthStore();
-    const { email, password, onInputChange } = useForm( SignInFormFields );
-    const [ isLoading, setIsLoading ] = useState( false );
-
-
-
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        setIsLoading( true );
-
-        if ( email.trim() === '' || password.trim() === '' ) {
-            alert('All fields are required');
-            setIsLoading( false );
-            return;
-        }
-
-        if ( !validateEmail( email ) ) {
-            alert('Invalid email');
-            setIsLoading( false );
-            return;
-        }
-
-        await startSignIn( email, password );
-        setIsLoading( false );
-        //onResetForm();
-    };
-
-
-
+    const { email, password, onInputChange, handleSubmit, isLoading } = useSingInForm();
 
     return (
         <div className="p-3 max-w-lg mx-auto">
@@ -81,7 +42,7 @@ const SignIn = () => {
                     />
                 <button
                     disabled={ isLoading }
-                    className="bg-slate-500 text-white p-2 rounded-lg mt-3 hover:bg-slate-700">
+                    className="bg-slate-500 text-white p-2 rounded-lg mt-3 hover:bg-slate-700 w-52 mx-auto">
                     {
                         isLoading ? (
                             <div className="flex items-center justify-center">
