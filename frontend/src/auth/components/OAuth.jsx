@@ -56,7 +56,6 @@ const OAuth = () => {
                 clientId={VITE_GOOGLE_CLIENT_ID}
                 onSuccess={ handleSuccess }
                 onFailure={() => console.log('Login Failure')}
-                width='100%'
             />
         </div>
     );
