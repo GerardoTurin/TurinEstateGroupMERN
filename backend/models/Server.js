@@ -4,6 +4,10 @@ import conectDB from "../db/conectDB.js";
 import userRouter from "../routes/userRoute.js";
 import cookieParser from "cookie-parser";
 import listingRouter from "../routes/listingRoute.js";
+//path
+import path from "path";
+
+const __dirname = path.resolve();
 
 
 
@@ -57,12 +61,15 @@ class Server {
         ));   // cookieParser: para usar cookies, se usa antes de las rutas
         
         
-        /* // Lectura y parseo del body
-        this.app.use( express.urlencoded({ extended: false }));
-        this.app.use( bodyParser.json() ); */
+         // Lectura y parseo del body
+        //this.app.use( express.urlencoded({ extended: false }));
+        //this.app.use( bodyParser.json() ); */
 
         // Directorio carpeta publica
-        //this.app.use(express.static(path.join( dirname, 'public')));   // use: para usar un middleware
+        this.app.use(express.static(path.join( __dirname, '/frontend/dist')));   // use: para usar un middleware
+        this.app.get('*', (req, res) => {
+            res.sendFile(path.join( __dirname, 'frontend', 'dist', 'index.html'));
+        });
         //this.app.use(express.static(path.join( path.dirname(import.meta.url), '/public/index.html')));
         //this.app.use(express.static('public'));   // use: para usar un middleware
 
