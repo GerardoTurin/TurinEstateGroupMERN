@@ -25,12 +25,9 @@ const Contact = ({ listing }) => {
     }
     const { name, email } = landlord.user;
 
-
     const onChange = (evt) => {
         setMessage(evt.target.value);
     }
-
-
 
     return (
         <>
