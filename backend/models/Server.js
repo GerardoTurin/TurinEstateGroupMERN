@@ -45,7 +45,7 @@ class Server {
         // Cors
         this.app.use( cors(
             {
-                origin: 'http://localhost:5173/',
+                origin: ['http://localhost:3000', 'https://turinestategroupmern.onrender.com'],
                 credentials: true,
                 methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             }
