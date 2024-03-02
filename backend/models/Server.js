@@ -81,7 +81,7 @@ class Server {
         this.app.use( this.paths.userPath, userRouter );   // use: para usar un middleware
         this.app.use( this.paths.listingPath, listingRouter );   // use: para usar un middleware
         this.app.get('*', (req, res) => {
-            res.sendFile(path.join( __dirname, 'frontend', 'dist', 'index.html'));
+            res.sendFile(path.join( __dirname, '/frontend/dist/index.html'));
         });
     };
 
