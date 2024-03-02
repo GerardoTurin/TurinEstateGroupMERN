@@ -47,7 +47,7 @@ const useSearch = () => {
 
             const searchQuery = urlParams.toString();
             const data = await startGetAllListings(searchQuery);
-            console.log(data.allListings);
+            //console.log(data.allListings);
 
             if (data.allListings && data.allListings.length > 8 ) {
                 setShowMore(true);
